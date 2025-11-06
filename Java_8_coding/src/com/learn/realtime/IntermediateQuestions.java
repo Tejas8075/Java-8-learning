@@ -45,6 +45,68 @@ public class IntermediateQuestions {
 												  ));
 		System.out.println(res4);
 		
+//		Total Salary Paid to Each Department
+		Map<String, Double> res5 = empList.stream()
+										  .collect(Collectors.groupingBy(Employee::getDepartment, 
+												  	Collectors.summingDouble(e -> e.getSalary())
+												  ));
+		System.out.println(res5);
+		
+//		Highest Salary Among Males and Females
+		Map<String, String> res6 = empList.stream()
+										  .collect(Collectors.groupingBy(Employee::getGender, 
+												  	Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingDouble(e -> e.getSalary())), e -> e.get().getName())	
+												  ));
+		System.out.println(res6);
+		
+//		Average Salary by Gender
+		Map<String, Double> res7 = empList.stream()
+										  .collect(Collectors.groupingBy(Employee::getGender, Collectors.averagingDouble(e -> e.getSalary())));
+		System.out.println(res7);
+		
+//		Employee with the Longest Name
+		Employee res8 = empList.stream()
+							   .max(Comparator.comparing(e -> e.getName().length()))
+							   .get();
+		System.out.println(res8);
+		
+//		Department with the Maximum Number of Employees
+		String res9 = empList.stream()
+							 .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.counting()))
+							 .entrySet().stream()
+							 .max(Map.Entry.comparingByValue())
+							 .get().getKey();
+		System.out.println(res9);
+		
+//		Youngest Employee in Product Development
+		Employee res10 = empList.stream()
+								.filter(e -> e.getDepartment().equalsIgnoreCase("Product Development"))
+								.min(Comparator.comparingInt(Employee::getAge))
+								.get();
+		System.out.println(res10);
+		
+//		Employees Joined Before 2015 Grouped by Department
+		Map<String, List<String>> res11 = empList.stream()
+												 .filter(e -> e.getYearOfJoining() > 2015)
+												 .collect(Collectors.groupingBy(Employee::getDepartment, 
+														 	Collectors.mapping(Employee::getName, Collectors.toList())
+														 ));
+		System.out.println(res11);
+		
+//		Second Highest Salary in the Organization
+		String res12 = empList.stream()
+							  .distinct()
+							  .sorted(Comparator.comparing(Employee::getSalary).reversed())
+							  .skip(1)
+							  .findFirst()
+							  .get()
+							  .getName();
+							  
+		System.out.println(res12);
+							  
+								
+							 
+		
 	}
 	
 	public static List<Employee> generateEmpList() {
